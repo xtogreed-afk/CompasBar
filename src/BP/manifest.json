@@ -1,0 +1,58 @@
+{
+    "format_version": 2,
+    "header": {
+        "name": "StorySmithsEngine [BP]",
+        "description": "StorySmithsEngine",
+        "uuid": "6306f615-6a85-41cd-8d43-063983215e27",
+        "version": [
+            0,
+            0,
+            1
+        ],
+        "min_engine_version": [
+            1,
+            26,
+            20
+        ]
+    },
+    "modules": [
+        {
+            "type": "data",
+            "uuid": "f675355b-6c6d-4c1b-bdea-afe2535a2951",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        },
+        {
+            "type": "script",
+            "language": "javascript",
+            "uuid": "2bf2f7e3-b691-4284-b7c4-1152df0dd881",
+            "entry": "scripts/main.js",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "module_name": "@minecraft/server",
+            "version": "beta"
+        },
+        {
+            "module_name": "@minecraft/server-ui",
+            "version": "beta"
+        },
+        {
+            "uuid": "9b826fcf-e855-4143-a558-41ad36f1d110",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        }
+    ]
+}

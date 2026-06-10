@@ -1,0 +1,39 @@
+{
+    "format_version": 2,
+    "header": {
+        "name": "StorySmithsEngine [RP]",
+        "description": "StorySmithsEngine",
+        "uuid": "9b826fcf-e855-4143-a558-41ad36f1d110",
+        "version": [
+            0,
+            0,
+            1
+        ],
+        "min_engine_version": [
+            1,
+            26,
+            20
+        ]
+    },
+    "modules": [
+        {
+            "type": "resources",
+            "uuid": "cb459445-4d9d-48a5-99b3-d256b5492146",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        }
+    ],
+    "dependencies": [
+        {
+            "uuid": "6306f615-6a85-41cd-8d43-063983215e27",
+            "version": [
+                0,
+                0,
+                1
+            ]
+        }
+    ]
+}
