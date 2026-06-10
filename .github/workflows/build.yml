@@ -19,7 +19,7 @@ jobs:
         run: npm install
 
       - name: Compile TS
-        run: npx tsc
+        run: npm run build
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
