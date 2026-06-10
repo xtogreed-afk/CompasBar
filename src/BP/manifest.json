@@ -1,40 +1,24 @@
 {
     "format_version": 2,
     "header": {
-        "name": "StorySmithsEngine [BP]",
-        "description": "StorySmithsEngine",
-        "uuid": "6306f615-6a85-41cd-8d43-063983215e27",
-        "version": [
-            0,
-            0,
-            1
-        ],
-        "min_engine_version": [
-            1,
-            26,
-            20
-        ]
+        "name": "SleepVote [BP]",
+        "description": "Sleep voting for multiplayer",
+        "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "version": [1, 0, 0],
+        "min_engine_version": [1, 26, 20]
     },
     "modules": [
         {
             "type": "data",
-            "uuid": "f675355b-6c6d-4c1b-bdea-afe2535a2951",
-            "version": [
-                0,
-                0,
-                1
-            ]
+            "uuid": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+            "version": [1, 0, 0]
         },
         {
             "type": "script",
             "language": "javascript",
-            "uuid": "2bf2f7e3-b691-4284-b7c4-1152df0dd881",
+            "uuid": "c3d4e5f6-a7b8-9012-cdef-123456789012",
             "entry": "scripts/main.js",
-            "version": [
-                0,
-                0,
-                1
-            ]
+            "version": [1, 0, 0]
         }
     ],
     "dependencies": [
@@ -43,16 +27,8 @@
             "version": "beta"
         },
         {
-            "module_name": "@minecraft/server-ui",
-            "version": "beta"
-        },
-        {
-            "uuid": "9b826fcf-e855-4143-a558-41ad36f1d110",
-            "version": [
-                0,
-                0,
-                1
-            ]
+            "uuid": "d4e5f6a7-b8c9-0123-defa-234567890123",
+            "version": [1, 0, 0]
         }
     ]
 }
