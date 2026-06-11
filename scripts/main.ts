@@ -78,12 +78,12 @@ mc.system.runInterval((): void => {
     }
 }, 5);
 
-mc.world.beforeEvents.chatSend.subscribe((ev: mc.ChatSendBeforeEvent): void => {
+mc.world.afterEvents.chatSend.subscribe((ev: mc.ChatSendAfterEvent): void => {
     const msg = ev.message.trim();
     const player = ev.sender;
 
     if (msg.startsWith("/mark ")) {
-        ev.cancel = true;
+        
         const parts = msg.slice(6).trim().split(" ");
         const name = parts[0];
         const typeRaw = parts[1] ?? "point";
@@ -105,7 +105,7 @@ mc.world.beforeEvents.chatSend.subscribe((ev: mc.ChatSendBeforeEvent): void => {
         }
 
     } else if (msg === "/marks") {
-        ev.cancel = true;
+        
         if (marks.length === 0) {
             player.sendMessage("§7Меток нет.");
             return;
@@ -121,7 +121,7 @@ mc.world.beforeEvents.chatSend.subscribe((ev: mc.ChatSendBeforeEvent): void => {
         player.sendMessage(list.trim());
 
     } else if (msg.startsWith("/delmark ")) {
-        ev.cancel = true;
+        
         const name = msg.slice(9).trim();
         const idx = marks.findIndex(m => m.name.toLowerCase() === name.toLowerCase());
         if (idx === -1) {
@@ -132,7 +132,7 @@ mc.world.beforeEvents.chatSend.subscribe((ev: mc.ChatSendBeforeEvent): void => {
         mc.world.sendMessage("§7[§bCompassHUD§7] Метка §e" + name + "§7 удалена.");
 
     } else if (msg === "/compasshelp") {
-        ev.cancel = true;
+        
         player.sendMessage(
             "§b── CompassHUD ──\n" +
             "§e/mark <имя> [base|danger|point]§7 — поставить метку\n" +
