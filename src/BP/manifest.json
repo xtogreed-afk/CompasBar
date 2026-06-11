@@ -27,8 +27,8 @@
             "version": "beta"
         },
         {
-            "uuid": "d4e5f6a7-b8c9-0123-defa-234567890123",
-            "version": [1, 0, 0]
+            "module_name": "@minecraft/server-ui",
+            "version": "beta"
         }
     ]
 }
