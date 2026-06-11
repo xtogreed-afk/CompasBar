@@ -10,22 +10,7 @@ interface VoteSession {
 }
 
 let session: VoteSession | undefined = undefined;
-
-function checkVotes(s: VoteSession): void {
-    if (s.votes.size < s.players.length) return;
-
-    const yes: number = [...s.votes.values()].filter((v: boolean) => v).length;
-    const total: number = s.votes.size;
-    const needed: number = Math.ceil(total * THRESHOLD);
-
-    if (yes >= needed) {
-        mc.world.setTimeOfDay(1000);
-        mc.world.sendMessage(`SleepVote: Night skipped! (${yes}/${total})`);
-    } else {
-        mc.world.sendMessage(`SleepVote: Vote failed. (${yes}/${total})`);
-    }
-    session = undefined;
-}
+let sleepingBefore: Set<string> = new Set<string>();
 
 async function showForm(player: mc.Player, sleeperName: string): Promise<void> {
     const form: ActionFormData = new ActionFormData()
@@ -38,22 +23,40 @@ async function showForm(player: mc.Player, sleeperName: string): Promise<void> {
     if (!session) return;
 
     session.votes.set(player.id, !result.canceled && result.selection === 0);
-    checkVotes(session);
+
+    const yes: number = [...session.votes.values()].filter((v: boolean) => v).length;
+    const total: number = session.players.length;
+    const needed: number = Math.ceil(total * THRESHOLD);
+
+    if (yes >= needed) {
+        mc.world.setTimeOfDay(1000);
+        mc.world.sendMessage(`SleepVote: Night skipped! (${yes}/${total})`);
+        session = undefined;
+    } else if (session.votes.size >= total) {
+        mc.world.sendMessage(`SleepVote: Vote failed. (${yes}/${total})`);
+        session = undefined;
+    }
 }
 
-mc.world.afterEvents.entitySleep.subscribe((event: mc.EntitySleepAfterEvent) => {
-    if (!(event.entity instanceof mc.Player)) return;
-    if (session !== undefined) return;
-
-    const sleeper: mc.Player = event.entity as mc.Player;
+mc.system.runInterval((): void => {
     const players: mc.Player[] = [...mc.world.getPlayers()];
+    const nowSleeping: Set<string> = new Set<string>(
+        players.filter((p: mc.Player) => p.isSleeping).map((p: mc.Player) => p.id)
+    );
 
-    session = {
-        sleeperName: sleeper.name,
-        votes: new Map<string, boolean>(),
-        players
-    };
+    for (const player of players) {
+        if (nowSleeping.has(player.id) && !sleepingBefore.has(player.id)) {
+            if (session !== undefined) break;
+            session = {
+                sleeperName: player.name,
+                votes: new Map<string, boolean>(),
+                players: [...players]
+            };
+            mc.world.sendMessage(`SleepVote: ${player.name} wants to skip the night!`);
+            for (const p of players) showForm(p, player.name);
+            break;
+        }
+    }
 
-    mc.world.sendMessage(`SleepVote: ${sleeper.name} wants to skip the night!`);
-    for (const player of players) showForm(player, sleeper.name);
-});
+    sleepingBefore = nowSleeping;
+}, 10);
