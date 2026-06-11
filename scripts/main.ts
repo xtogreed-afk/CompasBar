@@ -9,7 +9,6 @@ interface Mark {
 }
 
 const marks: Mark[] = [];
-
 const COMPASS_WIDTH = 24;
 const BASE = "----S----SW---W---NW---N---NE---E---SE---";
 
@@ -25,11 +24,9 @@ function angleDiff(a: number, b: number): number {
 }
 
 function markIcon(type: Mark["type"]): string {
-    switch (type) {
-        case "base":   return "§a⌂§f";
-        case "danger": return "§c!§f";
-        default:       return "§e▲§f";
-    }
+    if (type === "base") return "§a⌂§f";
+    if (type === "danger") return "§c!§f";
+    return "§e▲§f";
 }
 
 function buildCompassBar(player: mc.Player): string {
@@ -43,11 +40,7 @@ function buildCompassBar(player: mc.Player): string {
     const arr: string[] = [];
     for (let i = 0; i < COMPASS_WIDTH; i++) {
         const ch = full[(start + i) % full.length];
-        if (ch === "N") {
-            arr.push("§e" + ch + "§f");
-        } else {
-            arr.push(ch);
-        }
+        arr.push(ch === "N" ? "§e" + ch + "§f" : ch);
     }
 
     const pos = player.location;
@@ -68,8 +61,7 @@ function buildCompassBar(player: mc.Player): string {
 
 mc.system.runInterval((): void => {
     for (const player of mc.world.getPlayers()) {
-        const compass = buildCompassBar(player);
-        player.onScreenDisplay.setTitle(compass, {
+        player.onScreenDisplay.setTitle(buildCompassBar(player), {
             fadeInDuration: 0,
             stayDuration: 25,
             fadeOutDuration: 0,
@@ -78,13 +70,14 @@ mc.system.runInterval((): void => {
     }
 }, 5);
 
-mc.world.afterEvents.chatSend.subscribe((ev: mc.ChatSendAfterEvent): void => {
-    const msg = ev.message.trim();
-    const player = ev.sender;
+mc.world.beforeEvents.playerRunCommand.subscribe((ev: mc.PlayerRunCommandBeforeEvent): void => {
+    const cmd = ev.command.trim();
+    const player = ev.sourceEntity as mc.Player;
+    if (!player) return;
 
-    if (msg.startsWith("/mark ")) {
-        
-        const parts = msg.slice(6).trim().split(" ");
+    if (cmd.startsWith("mark ")) {
+        ev.cancel = true;
+        const parts = cmd.slice(5).trim().split(" ");
         const name = parts[0];
         const typeRaw = parts[1] ?? "point";
         const type: Mark["type"] =
@@ -104,8 +97,8 @@ mc.world.afterEvents.chatSend.subscribe((ev: mc.ChatSendAfterEvent): void => {
             mc.world.sendMessage("§7[§bCompassHUD§7] §e" + player.name + "§7 поставил метку §e" + name);
         }
 
-    } else if (msg === "/marks") {
-        
+    } else if (cmd === "marks") {
+        ev.cancel = true;
         if (marks.length === 0) {
             player.sendMessage("§7Меток нет.");
             return;
@@ -120,9 +113,9 @@ mc.world.afterEvents.chatSend.subscribe((ev: mc.ChatSendAfterEvent): void => {
         }
         player.sendMessage(list.trim());
 
-    } else if (msg.startsWith("/delmark ")) {
-        
-        const name = msg.slice(9).trim();
+    } else if (cmd.startsWith("delmark ")) {
+        ev.cancel = true;
+        const name = cmd.slice(8).trim();
         const idx = marks.findIndex(m => m.name.toLowerCase() === name.toLowerCase());
         if (idx === -1) {
             player.sendMessage("§cМетка §e" + name + "§c не найдена.");
@@ -131,8 +124,8 @@ mc.world.afterEvents.chatSend.subscribe((ev: mc.ChatSendAfterEvent): void => {
         marks.splice(idx, 1);
         mc.world.sendMessage("§7[§bCompassHUD§7] Метка §e" + name + "§7 удалена.");
 
-    } else if (msg === "/compasshelp") {
-        
+    } else if (cmd === "compasshelp") {
+        ev.cancel = true;
         player.sendMessage(
             "§b── CompassHUD ──\n" +
             "§e/mark <имя> [base|danger|point]§7 — поставить метку\n" +
